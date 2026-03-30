@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🛍️ 我的萌哒哒小店</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: 'Nunito', 'PingFang SC', sans-serif;
+  background: #FFF5E6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* ============================================================
+   CSS VARIABLES
+   ============================================================ */
+:root {
+  --pink:        #FF8FAB;
+  --pink-d:      #E5637A;
+  --pink-l:      #FFD6E4;
+  --pink-bg:     #FFF0F5;
+  --yellow:      #FFD166;
+  --yellow-d:    #E5A800;
+  --yellow-l:    #FFF4CC;
+  --yellow-bg:   #FFFBEE;
+  --mint:        #06D6A0;
+  --mint-d:      #04A87D;
+  --mint-l:      #C8F7EB;
+  --mint-bg:     #F0FDF8;
+  --peach:       #FF9F43;
+  --peach-d:     #E07B1A;
+  --sky:         #4ECDC4;
+  --sky-l:       #C8F4F2;
+  --purple:      #C084FC;
+  --purple-l:    #EDD9FF;
+  --red:         #FF6B6B;
+  --red-l:       #FFE0E0;
+  --brown:       #3D2B1F;
+  --brown-s:     #7A5C4F;
+  --brown-xs:    #B09080;
+  --surface:     #FFFFFF;
+  --surface2:    #FFF9F5;
+  --border:      rgba(61,43,31,0.08);
+  --shadow-sm:   0 2px 8px rgba(61,43,31,0.08);
+  --shadow-md:   0 6px 20px rgba(61,43,31,0.12);
+  --shadow-lg:   0 16px 48px rgba(61,43,31,0.16);
+  --radius-sm:   10px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-xl:   32px;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--pink-l); border-radius: 2px; }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #FFF5E6;
+  position: relative;
+}
+
+.screen { display: none; }
+.screen.active { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeUp    { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+@keyframes popIn     { 0% { opacity:0; transform:scale(0.7); } 60% { transform:scale(1.08); } 100% { opacity:1; transform:scale(1); } }
+@keyframes bounce    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes wiggle    { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-5deg)} 75%{transform:rotate(5deg)} }
+@keyframes shimmer   { from{background-position:-200% center} to{background-position:200% center} }
+@keyframes spin      { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes coinFloat { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-60px) scale(1.5)} }
+@keyframes ripple    { from{transform:scale(0);opacity:0.6} to{transform:scale(4);opacity:0} }
+@keyframes confettiDown { 0%{opacity:1;transform:translateY(-20px) rotate(0)} 100%{opacity:0;transform:translateY(120px) rotate(720deg)} }
+@keyframes pulse     { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+@keyframes slideUp   { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes slideDown { from{transform:translateY(0);opacity:1} to{transform:translateY(100%);opacity:0} }
+@keyframes glow      { 0%,100%{box-shadow:0 0 8px rgba(255,209,102,0.4)} 50%{box-shadow:0 0 24px rgba(255,209,102,0.8)} }
+@keyframes typewriter{ from{width:0} to{width:100%} }
+@keyframes starPop   { 0%{transform:scale(0) rotate(-20deg);opacity:0} 60%{transform:scale(1.3) rotate(5deg)} 100%{transform:scale(1) rotate(0);opacity:1} }
+
+/* ============================================================
+   START SCREEN
+   ============================================================ */
+#screen-start {
+  background: linear-gradient(160deg, #FFF0F5 0%, #FFF5E6 40%, #F0FDF8 100%);
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+  gap: 0;
+}
+
+.start-deco-top {
+  position: absolute; top: 0; left: 0; right: 0; height: 200px;
+  overflow: hidden; pointer-events: none;
+}
+.start-bubble {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+}
+.start-bubble:nth-child(1) { width:180px;height:180px;background:var(--pink);top:-60px;left:-40px;animation:pulse 4s infinite; }
+.start-bubble:nth-child(2) { width:120px;height:120px;background:var(--yellow);top:-20px;right:-30px;animation:pulse 5s infinite 1s; }
+.start-bubble:nth-child(3) { width:80px;height:80px;background:var(--mint);top:60px;right:60px;animation:pulse 3s infinite 0.5s; }
+
+.start-logo-wrap {
+  position: relative;
+  margin-bottom: 24px;
+  animation: fadeUp 0.8s ease;
+}
+.start-logo-bg {
+  width: 120px; height: 120px;
+  background: linear-gradient(135deg, var(--pink-l), var(--yellow-l));
+  border-radius: 36px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto;
+  box-shadow: 0 8px 32px rgba(255,143,171,0.3);
+  animation: glow 3s infinite;
+}
+.start-logo-emoji { font-size: 56px; animation: bounce 2s infinite; display: block; }
+
+.start-title {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--brown);
+  line-height: 1.2;
+  margin-bottom: 8px;
+  animation: fadeUp 0.8s ease 0.1s both;
+}
+.start-sub {
+  font-size: 14px;
+  color: var(--brown-s);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease 0.2s both;
+}
+
+.start-features {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.8s ease 0.3s both;
+}
+.feature-row {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+}
+.feature-icon-wrap {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.fi-pink  { background: var(--pink-bg); }
+.fi-yellow{ background: var(--yellow-bg); }
+.fi-mint  { background: var(--mint-bg); }
+.fi-purple{ background: #FAF0FF; }
+.feature-text { flex: 1; }
+.feature-title { font-size: 13px; font-weight: 800; color: var(--brown); }
+.feature-desc  { font-size: 11px; color: var(--brown-s); margin-top: 1px; }
+
+.start-btn {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, var(--pink), var(--pink-d));
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255,143,171,0.4);
+  transition: all 0.2s;
+  animation: fadeUp 0.8s ease 0.4s both;
+  letter-spacing: 0.5px;
+}
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,143,171,0.5); }
+.start-btn:active { transform: scale(0.97); }
+
+/* ============================================================
+   MAIN GAME SCREEN
+   ============================================================ */
+#screen-main {
+  background: #FFF5E6;
+}
+
+/* ---- TOP BAR ---- */
+.topbar {
+  background: var(--surface);
+  padding: 12px 16px 10px;
+  box-shadow: 0 2px 12px rgba(61,43,31,0.06);
+  position: sticky; top: 0; z-index: 50;
+  flex-shrink: 0;
+}
+.topbar-row1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.shop-avatar {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--pink-l), var(--yellow-l));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.shop-name-top { font-size: 15px; font-weight: 900; color: var(--brown); flex: 1; }
+.day-badge {
+  background: var(--yellow-bg);
+  border: 1px solid var(--yellow-l);
+  color: #92400E;
+  font-size: 11px; font-weight: 800;
+  padding: 4px 10px; border-radius: 20px;
+}
+.lv-badge {
+  background: linear-gradient(135deg, var(--peach), var(--yellow-d));
+  color: white;
+  font-size: 11px; font-weight: 900;
+  padding: 4px 10px; border-radius: 20px;
+}
+
+.topbar-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.ts-item {
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 6px 10px;
+  text-align: center;
+}
+.ts-label { font-size: 9px; color: var(--brown-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+.ts-val   { font-size: 15px; font-weight: 900; color: var(--brown); margin-top: 1px; }
+.ts-val.green { color: #16A34A; }
+.ts-val.purple { color: #7C3AED; }
+
+.xp-bar-wrap { margin-top: 6px; position: relative; }
+.xp-bar-bg { height: 5px; background: #F0E8E0; border-radius: 3px; overflow: hidden; }
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--yellow), var(--peach));
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+.xp-label { font-size: 9px; color: var(--brown-xs); text-align: right; margin-top: 2px; }
+
+/* ---- SHOP BANNER ---- */
+.shop-banner {
+  margin: 12px 12px 0;
+  background: linear-gradient(135deg, #FFE8F0, #FFF4CC, #E8FFF8);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.shop-banner::before {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(255,255,255,0.5), transparent);
+  border-radius: 50%;
+}
+.banner-icon {
+  font-size: 44px;
+  animation: bounce 3s infinite;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+.banner-info { flex: 1; }
+.banner-name  { font-size: 18px; font-weight: 900; color: var(--brown); }
+.banner-tag   { font-size: 11px; color: var(--brown-s); margin-top: 2px; }
+.banner-stars { margin-top: 6px; }
+.star { display: inline-block; font-size: 16px; transition: all 0.3s; }
+.star.filled  { color: var(--yellow); animation: starPop 0.4s ease; }
+.star.empty   { color: #DDD; }
+
+/* ---- NAV TABS ---- */
+.nav-tabs {
+  display: flex;
+  background: var(--surface);
+  margin: 10px 12px;
+  border-radius: var(--radius-md);
+  padding: 5px;
+  gap: 3px;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+.nav-tab {
+  flex: 1;
+  padding: 9px 4px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--brown-xs);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  position: relative;
+}
+.nav-tab .tab-icon { font-size: 18px; line-height: 1; }
+.nav-tab.active {
+  background: linear-gradient(135deg, var(--pink), var(--pink-d));
+  color: white;
+  box-shadow: 0 4px 12px rgba(255,143,171,0.4);
+}
+.nav-badge {
+  position: absolute;
+  top: 4px; right: 8px;
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 900;
+  width: 16px; height: 16px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ---- CONTENT AREA ---- */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 12px 100px;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeUp 0.3s ease; }
+
+/* ---- CARDS ---- */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+}
+.card-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+.card-title { font-size: 14px; font-weight: 800; color: var(--brown); }
+.card-badge {
+  margin-left: auto;
+  background: var(--pink-bg);
+  color: var(--pink-d);
+  font-size: 10px; font-weight: 800;
+  padding: 3px 8px; border-radius: 20px;
+}
+
+/* ---- PRODUCT GRID ---- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.product-card {
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.product-card:hover:not(.on-shelf) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-md);
+  border-color: var(--pink-l);
+}
+.product-card.selected {
+  border-color: var(--pink);
+  background: var(--pink-bg);
+  box-shadow: 0 0 0 3px rgba(255,143,171,0.2);
+}
+.product-card.on-shelf {
+  opacity: 0.55;
+  cursor: default;
+}
+.product-card.on-shelf::after {
+  content: '已上架';
+  position: absolute; inset: 0;
+  background: rgba(6,214,160,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; color: var(--mint-d);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--mint-l);
+}
+.prod-emoji { font-size: 32px; display: block; margin-bottom: 6px; }
+.prod-name  { font-size: 11px; font-weight: 800; color: var(--brown); line-height: 1.3; }
+.prod-cost  { font-size: 10px; color: var(--brown-xs); margin-top: 3px; }
+.prod-profit-badge {
+  display: inline-block;
+  margin-top: 4px;
+  background: var(--mint-l);
+  color: var(--mint-d);
+  font-size: 9px; font-weight: 800;
+  padding: 2px 6px; border-radius: 6px;
+}
+
+/* ---- PRICING PANEL ---- */
+.pricing-panel {
+  background: linear-gradient(135deg, var(--pink-bg), var(--yellow-bg));
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 10px;
+  border: 1.5px solid var(--pink-l);
+  display: none;
+  animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.pricing-selected-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.psp-emoji { font-size: 40px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
+.psp-info  { flex: 1; }
+.psp-name  { font-size: 16px; font-weight: 900; color: var(--brown); }
+.psp-hint  { font-size: 11px; color: var(--brown-s); margin-top: 2px; }
+
+.slider-wrap { margin: 12px 0; }
+.slider-labels {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--brown-s); font-weight: 700;
+  margin-bottom: 6px;
+}
+.price-display {
+  font-size: 28px; font-weight: 900; color: var(--pink-d);
+  text-align: center; margin-bottom: 8px;
+}
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%; height: 6px;
+  background: linear-gradient(90deg, var(--pink-l), var(--yellow-l));
+  border-radius: 3px; outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px;
+  background: white;
+  border: 3px solid var(--pink);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255,143,171,0.4);
+  transition: transform 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+.predict-box {
+  background: white;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.predict-item { text-align: center; }
+.predict-label { font-size: 10px; color: var(--brown-xs); font-weight: 700; }
+.predict-val   { font-size: 15px; font-weight: 900; color: var(--brown); margin-top: 2px; }
+.predict-val.green { color: #16A34A; }
+.predict-val.red   { color: var(--red); }
+
+/* ---- SHELF ---- */
+.shelf-progress {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.shelf-dots { display: flex; gap: 5px; }
+.shelf-dot {
+  width: 12px; height: 12px; border-radius: 4px;
+  background: var(--border);
+  transition: all 0.3s;
+}
+.shelf-dot.filled { background: var(--mint); }
+.shelf-label { font-size: 11px; color: var(--brown-s); font-weight: 700; }
+
+.shelf-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px;
+  background: var(--mint-bg);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  border: 1.5px solid var(--mint-l);
+  animation: fadeUp 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.shelf-item::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--mint);
+  border-radius: 2px 0 0 2px;
+}
+.si-emoji { font-size: 28px; flex-shrink: 0; }
+.si-info  { flex: 1; }
+.si-name  { font-size: 13px; font-weight: 800; color: var(--brown); }
+.si-detail { font-size: 11px; color: var(--brown-s); margin-top: 2px; }
+.si-remove {
+  background: var(--red-l);
+  color: var(--red);
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 11px; font-weight: 800;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  transition: all 0.15s;
+}
+.si-remove:hover { background: var(--red); color: white; }
+
+/* ---- CHANNEL SELECTOR ---- */
+.channel-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+}
+.channel-lock {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--brown-xs); font-weight: 700;
+}
+.channel-options {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-top: 10px;
+}
+.channel-option {
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  background: var(--surface2);
+}
+.channel-option:hover { transform: translateY(-2px); }
+.channel-option.active-ch { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(255,143,171,0.15); }
+.ch-icon  { font-size: 28px; display: block; margin-bottom: 6px; }
+.ch-name  { font-size: 12px; font-weight: 800; color: var(--brown); }
+.ch-desc  { font-size: 10px; color: var(--brown-s); margin-top: 3px; line-height: 1.4; }
+.ch-bonus { font-size: 10px; font-weight: 800; color: var(--mint-d); margin-top: 4px; }
+
+/* ---- ORDERS ---- */
+.order-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; gap: 12px;
+  animation: fadeUp 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.order-card:hover { box-shadow: var(--shadow-md); transform: translateX(2px); }
+.oc-emoji { font-size: 32px; flex-shrink: 0; }
+.oc-info  { flex: 1; }
+.oc-name  { font-size: 13px; font-weight: 800; color: var(--brown); }
+.oc-meta  { font-size: 10px; color: var(--brown-s); margin-top: 2px; }
+.oc-earn  { font-size: 16px; font-weight: 900; color: #16A34A; margin-right: 8px; }
+.pack-btn {
+  background: linear-gradient(135deg, var(--mint), var(--mint-d));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 3px 10px rgba(6,214,160,0.3);
+  white-space: nowrap;
+}
+.pack-btn:active { transform: scale(0.93); }
+
+.pack-all-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--mint), var(--mint-d));
+  color: white; border: none;
+  border-radius: var(--radius-md);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(6,214,160,0.3);
+  transition: all 0.2s; margin-bottom: 10px;
+}
+.pack-all-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(6,214,160,0.4); }
+.pack-all-btn:active { transform: scale(0.97); }
+
+.next-day-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--yellow), var(--peach));
+  color: white; border: none;
+  border-radius: var(--radius-md);
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px; font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255,209,102,0.4);
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.next-day-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,209,102,0.5); }
+.next-day-btn:active { transform: scale(0.97); }
+.next-day-btn.glow { animation: glow 1.5s infinite; }
+
+/* Day summary box */
+.day-summary {
+  background: linear-gradient(135deg, var(--yellow-bg), #FFF0F5);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border: 1.5px solid var(--yellow-l);
+}
+.ds-title { font-size: 13px; font-weight: 800; color: #92400E; margin-bottom: 8px; }
+.ds-row   { display: flex; justify-content: space-between; font-size: 12px; color: var(--brown-s); padding: 3px 0; }
+.ds-val   { font-weight: 800; color: var(--brown); }
+
+/* ---- STATS TAB ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.stat-box {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+.sb-icon  { font-size: 24px; margin-bottom: 6px; }
+.sb-label { font-size: 10px; color: var(--brown-xs); font-weight: 700; }
+.sb-val   { font-size: 20px; font-weight: 900; color: var(--brown); margin-top: 2px; }
+
+.revenue-bar-wrap { margin-top: 8px; }
+.revenue-goal { font-size: 11px; color: var(--brown-s); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.revenue-bar { height: 8px; background: #F0E8E0; border-radius: 4px; overflow: hidden; }
+.revenue-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--pink), var(--yellow), var(--mint));
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* ---- ACHIEVEMENTS ---- */
+.ach-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.ach-item {
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: all 0.3s;
+}
+.ach-item.unlocked {
+  background: var(--yellow-bg);
+  border-color: var(--yellow-l);
+  animation: glow 2s infinite;
+}
+.ach-emoji { font-size: 28px; display: block; margin-bottom: 6px; }
+.ach-name  { font-size: 11px; font-weight: 800; color: var(--brown); }
+.ach-locked { opacity: 0.4; filter: grayscale(1); }
+
+/* ---- EVENT LOG ---- */
+.log-item {
+  font-size: 11px; color: var(--brown-s);
+  padding: 6px 8px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  background: var(--surface2);
+  line-height: 1.5;
+}
+.log-item.good { background: var(--mint-bg); color: #065F46; }
+.log-item.bad  { background: var(--red-l);   color: #B91C1C; }
+
+/* ============================================================
+   EVENT POPUP
+   ============================================================ */
+.event-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.event-popup {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: 24px 20px;
+  max-width: 360px; width: 100%;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  position: relative; overflow: hidden;
+}
+.event-popup::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+}
+.event-popup.good::before  { background: linear-gradient(90deg, var(--mint), var(--yellow)); }
+.event-popup.bad::before   { background: linear-gradient(90deg, var(--red), var(--pink)); }
+.event-popup.neutral::before { background: linear-gradient(90deg, var(--yellow), var(--peach)); }
+
+.event-icon-wrap {
+  width: 80px; height: 80px;
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px;
+  margin: 0 auto 12px;
+  animation: bounce 1s infinite;
+}
+.event-icon-wrap.good    { background: var(--mint-bg); }
+.event-icon-wrap.bad     { background: var(--red-l); }
+.event-icon-wrap.neutral { background: var(--yellow-bg); }
+
+.event-badge {
+  display: inline-block;
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 800;
+  margin-bottom: 10px;
+}
+.eb-good    { background: var(--mint-l);  color: #065F46; }
+.eb-bad     { background: var(--red-l);   color: #B91C1C; }
+.eb-neutral { background: var(--yellow-l);color: #92400E; }
+
+.event-title { font-size: 18px; font-weight: 900; color: var(--brown); margin-bottom: 8px; }
+.event-desc  { font-size: 12px; color: var(--brown-s); line-height: 1.7; margin-bottom: 16px; }
+
+.event-choices { display: flex; flex-direction: column; gap: 8px; }
+.choice-btn {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 2px solid #F0E8E0;
+  background: var(--surface2);
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--brown);
+  transition: all 0.15s;
+  text-align: left;
+  display: flex; align-items: center; gap: 8px;
+  position: relative; overflow: hidden;
+}
+.choice-btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,143,171,0);
+  transition: background 0.2s;
+}
+.choice-btn:hover { border-color: var(--pink); background: var(--pink-bg); transform: translateX(3px); }
+.choice-btn:hover::after { background: rgba(255,143,171,0.05); }
+.choice-btn:active { transform: scale(0.98); }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 300; pointer-events: none; }
+.toast {
+  background: var(--brown);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 13px; font-weight: 700;
+  white-space: nowrap;
+  animation: fadeUp 0.3s ease;
+  margin-bottom: 6px;
+  box-shadow: var(--shadow-md);
+}
+.toast.good    { background: #065F46; }
+.toast.bad     { background: #B91C1C; }
+.toast.neutral { background: #92400E; }
+
+/* ============================================================
+   FLOATING COIN
+   ============================================================ */
+.coin-float {
+  position: fixed;
+  font-size: 20px; font-weight: 900;
+  color: #16A34A;
+  pointer-events: none; z-index: 400;
+  animation: coinFloat 1s ease-out forwards;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ============================================================
+   ACHIEVEMENT POPUP
+   ============================================================ */
+.ach-popup {
+  position: fixed;
+  bottom: 80px; right: 16px;
+  background: white;
+  border: 2px solid var(--yellow);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  z-index: 300;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: var(--shadow-lg);
+  max-width: 200px;
+}
+.ap-label { font-size: 10px; font-weight: 800; color: #92400E; }
+.ap-name  { font-size: 14px; font-weight: 900; color: var(--brown); margin-top: 2px; }
+
+/* ============================================================
+   CONFETTI
+   ============================================================ */
+.confetti-p {
+  position: fixed;
+  width: 8px; height: 10px;
+  border-radius: 2px;
+  pointer-events: none; z-index: 500;
+  animation: confettiDown 1.8s ease-out forwards;
+}
+
+/* ============================================================
+   LEVEL UP POPUP
+   ============================================================ */
+.levelup-popup {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.4);
+  z-index: 250;
+  animation: fadeIn 0.2s ease;
+}
+.levelup-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 32px 28px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  max-width: 300px;
+}
+.lu-icon  { font-size: 60px; animation: bounce 0.5s infinite; }
+.lu-title { font-size: 14px; color: var(--brown-s); margin-top: 8px; font-weight: 700; }
+.lu-lv    { font-size: 48px; font-weight: 900; color: var(--brown); margin: 4px 0; }
+.lu-unlocks { font-size: 12px; color: var(--brown-s); line-height: 1.7; }
+.lu-btn {
+  margin-top: 20px; width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--yellow), var(--peach));
+  color: white; border: none;
+  border-radius: var(--radius-md);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,209,102,0.4);
+  transition: all 0.15s;
+}
+.lu-btn:active { transform: scale(0.97); }
+
+/* ============================================================
+   GAME OVER SCREEN
+   ============================================================ */
+#screen-gameover {
+  background: linear-gradient(160deg, #FFF0F5, #FFF5E6, #F0FDF8);
+  align-items: center; justify-content: center;
+  padding: 32px 24px; text-align: center;
+}
+.go-emoji { font-size: 80px; animation: bounce 1s infinite; display: block; margin-bottom: 16px; }
+.go-title { font-size: 28px; font-weight: 900; color: var(--brown); margin-bottom: 8px; }
+.go-sub   { font-size: 14px; color: var(--brown-s); margin-bottom: 28px; line-height: 1.7; }
+.final-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; width: 100%; margin-bottom: 28px;
+}
+.final-box {
+  background: white; border-radius: var(--radius-md);
+  padding: 14px; box-shadow: var(--shadow-sm);
+}
+.fb-label { font-size: 10px; color: var(--brown-xs); font-weight: 700; }
+.fb-val   { font-size: 22px; font-weight: 900; color: var(--brown); margin-top: 4px; }
+.go-btn {
+  width: 100%; padding: 18px;
+  background: linear-gradient(135deg, var(--pink), var(--pink-d));
+  color: white; border: none;
+  border-radius: var(--radius-lg);
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px; font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255,143,171,0.4);
+  transition: all 0.2s;
+}
+.go-btn:hover { transform: translateY(-2px); }
+.go-btn:active { transform: scale(0.97); }
+
+/* ============================================================
+   MUSIC CONTROL
+   ============================================================ */
+.music-btn {
+  position: fixed; bottom: 20px; right: 16px;
+  width: 44px; height: 44px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 100;
+  border: none;
+  transition: all 0.2s;
+}
+.music-btn:hover { transform: scale(1.1); }
+.music-btn.playing { animation: spin 3s linear infinite; }
+
+/* ============================================================
+   PROGRESS MILESTONE
+   ============================================================ */
+.milestone-bar {
+  margin: 10px 12px;
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.ms-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--brown-s); font-weight: 700; margin-bottom: 6px; }
+.ms-track { display: flex; gap: 4px; }
+.ms-seg {
+  height: 8px; border-radius: 4px; flex: 1;
+  background: #F0E8E0; transition: all 0.5s;
+}
+.ms-seg.done { background: linear-gradient(90deg, var(--pink), var(--yellow)); }
+
+/* ============================================================
+   EMPTY STATES
+   ============================================================ */
+.empty-state {
+  text-align: center; padding: 32px 20px;
+  color: var(--brown-xs); font-size: 13px; line-height: 1.8;
+}
+.empty-emoji { font-size: 40px; display: block; margin-bottom: 10px; }
+
+/* ============================================================
+   AUDIO UNLOCK
+   ============================================================ */
+.audio-unlock {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+}
+.au-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 32px 28px;
+  text-align: center;
+  max-width: 320px;
+  box-shadow: var(--shadow-lg);
+  animation: popIn 0.4s ease;
+}
+.au-icon  { font-size: 56px; display: block; margin-bottom: 16px; animation: bounce 1s infinite; }
+.au-title { font-size: 20px; font-weight: 900; color: var(--brown); margin-bottom: 8px; }
+.au-sub   { font-size: 13px; color: var(--brown-s); line-height: 1.7; margin-bottom: 24px; }
+.au-btn {
+  width: 100%; padding: 16px;
+  background: linear-gradient(135deg, var(--pink), var(--pink-d));
+  color: white; border: none;
+  border-radius: var(--radius-lg);
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px; font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(255,143,171,0.4);
+}
+.au-skip {
+  margin-top: 12px; font-size: 12px; color: var(--brown-xs);
+  cursor: pointer; font-weight: 700; text-decoration: underline;
+  background: none; border: none; font-family: 'Nunito', sans-serif;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ========================================================
+     AUDIO UNLOCK SCREEN
+     ======================================================== -->
+<div class="audio-unlock" id="audio-unlock">
+  <div class="au-card">
+    <span class="au-icon">🎵</span>
+    <div class="au-title">开启沉浸音效</div>
+    <div class="au-sub">打开音效，体验金币叮当声、<br>BGM背景音乐和满满的开店氛围！</div>
+    <button class="au-btn" onclick="initAudioAndStart(true)">🔊 开启音效，开始游戏！</button>
+    <button class="au-skip" onclick="initAudioAndStart(false)">静音开始</button>
+  </div>
+</div>
+
+<!-- ========================================================
+     START SCREEN
+     ======================================================== -->
+<div class="screen" id="screen-start">
+  <div class="start-deco-top">
+    <div class="start-bubble"></div>
+    <div class="start-bubble"></div>
+    <div class="start-bubble"></div>
+  </div>
+
+  <div class="start-logo-wrap">
+    <div class="start-logo-bg">
+      <span class="start-logo-emoji">🛍️</span>
+    </div>
+  </div>
+
+  <div class="start-title">我的萌哒哒小店</div>
+  <div class="start-sub">从 ¥300 起步，打造百万营业额的<br>人气电商店铺！</div>
+
+  <div class="start-features">
+    <div class="feature-row">
+      <div class="feature-icon-wrap fi-pink">📦</div>
+      <div class="feature-text">
+        <div class="feature-title">真实选品定价策略</div>
+        <div class="feature-desc">20种商品，滑块定价，实时预测收益</div>
+      </div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-icon-wrap fi-yellow">⚡</div>
+      <div class="feature-text">
+        <div class="feature-title">流量渠道分化机制</div>
+        <div class="feature-desc">种草社区 vs 短视频平台，策略不同</div>
+      </div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-icon-wrap fi-mint">🎲</div>
+      <div class="feature-text">
+        <div class="feature-title">12种随机事件</div>
+        <div class="feature-desc">退货纠纷、大V转发、税务检查…</div>
+      </div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-icon-wrap fi-purple">🏆</div>
+      <div class="feature-text">
+        <div class="feature-title">养成升级成就系统</div>
+        <div class="feature-desc">解锁新功能，收集全部成就徽章</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startGame()">开始开店！🎉</button>
+</div>
+
+<!-- ========================================================
+     MAIN GAME SCREEN
+     ======================================================== -->
+<div class="screen" id="screen-main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-row1">
+      <div class="shop-avatar" id="tb-avatar">🏪</div>
+      <div class="shop-name-top" id="tb-shopname">我的小店</div>
+      <div class="day-badge" id="tb-day">第1天</div>
+      <div class="lv-badge" id="tb-lv">Lv.1</div>
+    </div>
+    <div class="topbar-stats">
+      <div class="ts-item">
+        <div class="ts-label">💰 资金</div>
+        <div class="ts-val green" id="tb-money">¥300</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-label">⭐ 口碑</div>
+        <div class="ts-val purple" id="tb-rep">100</div>
+      </div>
+      <div class="ts-item">
+        <div class="ts-label">📈 营业额</div>
+        <div class="ts-val" id="tb-rev">¥0</div>
+      </div>
+    </div>
+    <div class="xp-bar-wrap">
+      <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+      <div class="xp-label" id="xp-label">升级进度 0 / 200 XP</div>
+    </div>
+  </div>
+
+  <!-- SHOP BANNER -->
+  <div class="shop-banner">
+    <span class="banner-icon" id="bn-icon">🏪</span>
+    <div class="banner-info">
+      <div class="banner-name" id="bn-name">我的小店</div>
+      <div class="banner-tag" id="bn-tag">刚刚开张，加油！</div>
+      <div class="banner-stars" id="bn-stars">
+        <span class="star empty">☆</span><span class="star empty">☆</span>
+        <span class="star empty">☆</span><span class="star empty">☆</span><span class="star empty">☆</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MILESTONE BAR -->
+  <div class="milestone-bar">
+    <div class="ms-label">
+      <span>🎯 百万目标进度</span>
+      <span id="ms-pct">0%</span>
+    </div>
+    <div class="ms-track" id="ms-track">
+      <div class="ms-seg"></div><div class="ms-seg"></div><div class="ms-seg"></div><div class="ms-seg"></div>
+      <div class="ms-seg"></div><div class="ms-seg"></div><div class="ms-seg"></div><div class="ms-seg"></div>
+      <div class="ms-seg"></div><div class="ms-seg"></div>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('shop')" id="ntab-shop">
+      <span class="tab-icon">🛒</span><span>选品</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('shelf')" id="ntab-shelf">
+      <span class="tab-icon">📋</span><span>货架</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('orders')" id="ntab-orders">
+      <span class="tab-icon">📦</span><span>订单</span>
+      <span class="nav-badge" id="order-badge" style="display:none">0</span>
+    </button>
+    <button class="nav-tab" onclick="switchTab('stats')" id="ntab-stats">
+      <span class="tab-icon">📊</span><span>数据</span>
+    </button>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+
+    <!-- ====== TAB: SHOP ====== -->
+    <div class="tab-content active" id="tab-shop">
+      <div class="card">
+        <div class="card-header">
+          <span>🛍️</span>
+          <div class="card-title">商品库</div>
+          <div class="card-badge" id="shelf-count-badge">货架 0/5</div>
+        </div>
+        <div class="product-grid" id="product-grid"></div>
+      </div>
+
+      <!-- PRICING PANEL -->
+      <div class="pricing-panel" id="pricing-panel">
+        <div class="pricing-selected-preview">
+          <span class="psp-emoji" id="psp-emoji">📦</span>
+          <div class="psp-info">
+            <div class="psp-name" id="psp-name">商品名称</div>
+            <div class="psp-hint">拖动滑块设置售价</div>
+          </div>
+        </div>
+        <div class="price-display" id="price-display">¥--</div>
+        <div class="slider-wrap">
+          <div class="slider-labels">
+            <span id="price-min">最低</span>
+            <span id="price-max">最高</span>
+          </div>
+          <input type="range" id="price-slider" min="1" max="100" value="30" oninput="updatePricing()">
+        </div>
+        <div class="predict-box">
+          <div class="predict-item">
+            <div class="predict-label">预计订单</div>
+            <div class="predict-val" id="pred-orders">--</div>
+          </div>
+          <div class="predict-item">
+            <div class="predict-label">单品利润</div>
+            <div class="predict-val green" id="pred-profit">¥--</div>
+          </div>
+          <div class="predict-item">
+            <div class="predict-label">日收益</div>
+            <div class="predict-val green" id="pred-earn">¥--</div>
+          </div>
+        </div>
+        <button class="next-day-btn" style="font-size:15px;padding:14px;margin-bottom:8px;" onclick="listProduct()">
+          🚀 一键上架！
+        </button>
+        <button class="pack-all-btn" style="background:linear-gradient(135deg,#ccc,#aaa);box-shadow:none;font-size:13px;padding:10px;" onclick="cancelSelect()">
+          取消选择
+        </button>
+      </div>
+    </div>
+
+    <!-- ====== TAB: SHELF ====== -->
+    <div class="tab-content" id="tab-shelf">
+      <!-- Channel Selector -->
+      <div class="channel-card">
+        <div class="card-header" style="margin-bottom:8px">
+          <span>📡</span>
+          <div class="card-title">流量渠道</div>
+          <div class="card-badge" id="ch-lock-badge">Lv.2 解锁</div>
+        </div>
+        <div class="channel-options" id="channel-options">
+          <div class="channel-option" id="ch-social" onclick="selectChannel('social')">
+            <span class="ch-icon">🌸</span>
+            <div class="ch-name">生活种草社区</div>
+            <div class="ch-desc">转化高但慢<br>适合高端品</div>
+            <div class="ch-bonus">转化 +20%</div>
+          </div>
+          <div class="channel-option" id="ch-video" onclick="selectChannel('video')">
+            <span class="ch-icon">📹</span>
+            <div class="ch-name">短视频平台</div>
+            <div class="ch-desc">爆发快，客单价低<br>易触发刷单风险</div>
+            <div class="ch-bonus">订单量 ×1.8</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shelf Items -->
+      <div class="card">
+        <div class="card-header">
+          <span>📋</span>
+          <div class="card-title">当前货架</div>
+        </div>
+        <div class="shelf-progress">
+          <div class="shelf-dots" id="shelf-dots"></div>
+          <div class="shelf-label" id="shelf-label">0 / 5 个商品</div>
+        </div>
+        <div id="shelf-list">
+          <div class="empty-state">
+            <span class="empty-emoji">🏪</span>
+            还没有上架商品哦~<br>去选品页选择商品上架吧！
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== TAB: ORDERS ====== -->
+    <div class="tab-content" id="tab-orders">
+      <!-- Day Summary (shown after nextDay) -->
+      <div id="day-summary-wrap"></div>
+
+      <div id="orders-list-wrap">
+        <div class="empty-state" id="orders-empty">
+          <span class="empty-emoji">📭</span>
+          暂无待处理订单<br>上架商品后进入下一天等待订单！
+        </div>
+      </div>
+
+      <div id="order-actions" style="margin-top:8px"></div>
+    </div>
+
+    <!-- ====== TAB: STATS ====== -->
+    <div class="tab-content" id="tab-stats">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="sb-icon">💰</div>
+          <div class="sb-label">总营业额</div>
+          <div class="sb-val" id="st-rev">¥0</div>
+        </div>
+        <div class="stat-box">
+          <div class="sb-icon">📦</div>
+          <div class="sb-label">成交订单</div>
+          <div class="sb-val" id="st-orders">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="sb-icon">🎯</div>
+          <div class="sb-label">今日转化</div>
+          <div class="sb-val" id="st-conv">0%</div>
+        </div>
+        <div class="stat-box">
+          <div class="sb-icon">⭐</div>
+          <div class="sb-label">口碑评分</div>
+          <div class="sb-val" id="st-rep">100</div>
+        </div>
+      </div>
+
+      <!-- Revenue goal bar -->
+      <div class="card">
+        <div class="card-header">
+          <span>🎯</span>
+          <div class="card-title">百万目标</div>
+        </div>
+        <div class="revenue-goal">
+          <span id="goal-cur">¥0</span>
+          <span>目标 ¥1,000,000</span>
+        </div>
+        <div class="revenue-bar">
+          <div class="revenue-fill" id="goal-bar" style="width:0%"></div>
+        </div>
+        <div style="font-size:11px;color:var(--brown-xs);margin-top:6px;text-align:right" id="goal-pct">0% 完成</div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="card">
+        <div class="card-header">
+          <span>🏅</span>
+          <div class="card-title">成就系统</div>
+          <div class="card-badge" id="ach-count-badge">0/6 解锁</div>
+        </div>
+        <div class="ach-grid" id="ach-grid"></div>
+      </div>
+
+      <!-- Event Log -->
+      <div class="card">
+        <div class="card-header">
+          <span>📜</span>
+          <div class="card-title">事件日志</div>
+        </div>
+        <div id="event-log" style="max-height:200px;overflow-y:auto;"></div>
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+</div><!-- /screen-main -->
+
+<!-- ========================================================
+     GAME OVER SCREEN
+     ======================================================== -->
+<div class="screen" id="screen-gameover">
+  <span class="go-emoji" id="go-emoji">🎊</span>
+  <div class="go-title" id="go-title">恭喜！</div>
+  <div class="go-sub"   id="go-sub">你成功了！</div>
+  <div class="final-grid" id="final-grid"></div>
+  <button class="go-btn" onclick="showStart()">再来一局！🔄</button>
+</div>
+
+<!-- Music toggle -->
+<button class="music-btn" id="music-btn" onclick="toggleMusic()" title="音乐开关">🎵</button>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+</div><!-- /app -->
+
+<script>
+/* ============================================================
+   AUDIO ENGINE (Web Audio API — no CDN needed)
+   ============================================================ */
+let AC = null;
+let bgmGain = null;
+let sfxGain = null;
+let bgmOscillators = [];
+let musicOn = false;
+let musicPlaying = false;
+
+function initAudio() {
+  try {
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    bgmGain = AC.createGain(); bgmGain.gain.value = 0.12; bgmGain.connect(AC.destination);
+    sfxGain = AC.createGain(); sfxGain.gain.value = 0.4;  sfxGain.connect(AC.destination);
+  } catch(e) { console.log('No audio:', e); }
+}
+
+/* --- SFX helpers --- */
+function playTone(freq, type, duration, vol, delay) {
+  if(!AC || !musicOn) return;
+  try {
+    const osc = AC.createOscillator();
+    const g   = AC.createGain();
+    osc.connect(g); g.connect(sfxGain);
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    const t = AC.currentTime + (delay||0);
+    g.gain.setValueAtTime(vol||0.3, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + duration);
+    osc.start(t); osc.stop(t + duration + 0.05);
+  } catch(e){}
+}
+
+function sfxCoin() {
+  playTone(880, 'sine', 0.12, 0.5);
+  playTone(1100,'sine', 0.1,  0.4, 0.06);
+  playTone(1320,'sine', 0.08, 0.3, 0.12);
+}
+function sfxSuccess() {
+  [523,659,784,1047].forEach((f,i) => playTone(f,'sine',0.18,0.35,i*0.08));
+}
+function sfxWarning() {
+  playTone(220,'sawtooth',0.15,0.3);
+  playTone(180,'sawtooth',0.12,0.15,0.18);
+}
+function sfxClick() {
+  playTone(660,'sine',0.06,0.25);
+}
+function sfxLevelup() {
+  const notes = [523,659,784,1047,1319];
+  notes.forEach((f,i) => playTone(f,'sine',0.25,0.4,i*0.1));
+}
+function sfxEvent() {
+  playTone(440,'triangle',0.1,0.3);
+  playTone(550,'triangle',0.08,0.2,0.12);
+}
+function sfxPack() {
+  playTone(400,'sine',0.08,0.3);
+  playTone(600,'sine',0.06,0.1,0.1);
+}
+
+/* --- BGM (simple procedural loop) --- */
+const BGM_NOTES = [261,294,330,349,392,440,494,523];
+let bgmSeq = null;
+
+function startBGM() {
+  if(!AC || !musicOn || musicPlaying) return;
+  musicPlaying = true;
+  document.getElementById('music-btn').classList.add('playing');
+  let step = 0;
+  function playStep() {
+    if(!musicPlaying) return;
+    const note = BGM_NOTES[step % BGM_NOTES.length];
+    try {
+      const osc = AC.createOscillator();
+      const g   = AC.createGain();
+      osc.connect(g); g.connect(bgmGain);
+      osc.type = 'sine';
+      osc.frequency.value = note;
+      g.gain.setValueAtTime(0.001, AC.currentTime);
+      g.gain.linearRampToValueAtTime(0.3, AC.currentTime + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + 0.4);
+      osc.start(AC.currentTime); osc.stop(AC.currentTime + 0.5);
+    } catch(e){}
+    step++;
+    bgmSeq = setTimeout(playStep, 350 + (step%3)*50);
+  }
+  playStep();
+}
+
+function stopBGM() {
+  musicPlaying = false;
+  clearTimeout(bgmSeq);
+  document.getElementById('music-btn').classList.remove('playing');
+}
+
+function toggleMusic() {
+  sfxClick();
+  if(musicPlaying) { stopBGM(); }
+  else { startBGM(); }
+}
+
+function initAudioAndStart(withSound) {
+  document.getElementById('audio-unlock').style.display = 'none';
+  initAudio();
+  musicOn = withSound;
+  if(withSound) startBGM();
+  showScreen('start');
+}
+
+/* ============================================================
+   GAME DATA
+   ============================================================ */
+const PRODUCTS = [
+  { id:1,  name:'简约T恤',   emoji:'👕', cost:28, minP:35,  maxP:120, base:6,  cat:'fashion' },
+  { id:2,  name:'帆布包',    emoji:'👜', cost:22, minP:30,  maxP:90,  base:5,  cat:'fashion' },
+  { id:3,  name:'蓝牙耳机',  emoji:'🎧', cost:60, minP:80,  maxP:280, base:4,  cat:'tech'    },
+  { id:4,  name:'护肤面膜',  emoji:'🧖', cost:18, minP:25,  maxP:80,  base:8,  cat:'beauty'  },
+  { id:5,  name:'保温杯',    emoji:'🫖', cost:35, minP:45,  maxP:150, base:5,  cat:'life'    },
+  { id:6,  name:'手机支架',  emoji:'📱', cost:12, minP:18,  maxP:60,  base:9,  cat:'tech'    },
+  { id:7,  name:'香薰蜡烛',  emoji:'🕯️', cost:25, minP:35,  maxP:120, base:4,  cat:'life'    },
+  { id:8,  name:'卡通贴纸',  emoji:'🌟', cost:5,  minP:8,   maxP:30,  base:12, cat:'creative'},
+  { id:9,  name:'小众发饰',  emoji:'🎀', cost:15, minP:22,  maxP:75,  base:7,  cat:'fashion' },
+  { id:10, name:'手工杯垫',  emoji:'🍵', cost:10, minP:16,  maxP:55,  base:6,  cat:'creative'},
+  { id:11, name:'迷你风扇',  emoji:'🌀', cost:40, minP:55,  maxP:180, base:5,  cat:'tech'    },
+  { id:12, name:'网红零食',  emoji:'🍡', cost:20, minP:28,  maxP:88,  base:10, cat:'food'    },
+  { id:13, name:'棉麻睡衣',  emoji:'🌙', cost:45, minP:60,  maxP:180, base:4,  cat:'fashion' },
+  { id:14, name:'多肉植物',  emoji:'🌵', cost:15, minP:22,  maxP:68,  base:6,  cat:'life'    },
+  { id:15, name:'猫咪周边',  emoji:'🐱', cost:18, minP:25,  maxP:80,  base:8,  cat:'creative'},
+  { id:16, name:'手账本',    emoji:'📔', cost:12, minP:18,  maxP:58,  base:7,  cat:'creative'},
+  { id:17, name:'有机洗发水',emoji:'🧴', cost:30, minP:42,  maxP:130, base:5,  cat:'beauty'  },
+  { id:18, name:'折叠雨伞',  emoji:'☂️', cost:22, minP:32,  maxP:95,  base:6,  cat:'life'    },
+  { id:19, name:'宠物玩具',  emoji:'🐾', cost:16, minP:24,  maxP:72,  base:7,  cat:'pet'     },
+  { id:20, name:'定制马克杯',emoji:'☕', cost:20, minP:30,  maxP:88,  base:6,  cat:'creative'},
+];
+
+const EVENTS = [
+  { id:'hot',      name:'爆款突然降临！',   emoji:'🔥', type:'good',    badge:'好事',
+    desc:'你的某件商品被平台算法推荐，瞬间成为爆款！订单量暴增！',
+    choices:[
+      { text:'🚀 全力备货冲单 (-¥80)',   effect: g => { g.money-=80; g.dailyOrderBonus+=15; g.rep+=20; log('备货冲单！+15订单 +20口碑','good'); } },
+      { text:'😊 正常维持，稳稳接单',    effect: g => { g.dailyOrderBonus+=8; g.rep+=10; log('小爆款！+8订单 +10口碑','good'); } },
+    ]},
+  { id:'goodrep',  name:'好评如潮！',        emoji:'⭐', type:'good',    badge:'好事',
+    desc:'买家们纷纷给了五星好评，口碑大涨！这是积累人气的好机会！',
+    choices:[
+      { text:'📢 截图宣传，扩大影响力', effect: g => { g.rep+=40; g.dailyOrderBonus+=3; log('+40口碑 +3订单','good'); } },
+      { text:'😌 低调感谢买家们',       effect: g => { g.rep+=25; log('+25口碑','good'); } },
+    ]},
+  { id:'recommend',name:'平台推荐位推送！',  emoji:'🎯', type:'good',    badge:'好事',
+    desc:'平台给了你一个推荐位机会！付费加推效果更好，免费也有基础流量。',
+    choices:[
+      { text:'💸 付费加推 (-¥100)',     effect: g => { if(g.money>=100){g.money-=100;g.dailyOrderBonus+=20;g.rep+=15;log('付费加推！+20订单 +15口碑','good');}else{log('资金不足，免费推送','neutral');g.dailyOrderBonus+=8;} } },
+      { text:'✅ 免费推送就够了',       effect: g => { g.dailyOrderBonus+=10; g.rep+=8; log('免费推送 +10订单','good'); } },
+    ]},
+  { id:'badrep',   name:'差评风暴来袭！',    emoji:'💀', type:'bad',     badge:'危机',
+    desc:'有买家集中给差评，口碑遭受重创！需要尽快处理才能止损。',
+    choices:[
+      { text:'🙏 诚恳道歉并补偿 (-¥60)',effect: g => { if(g.money>=60){g.money-=60;g.rep-=10;log('补偿处理，减少损失','neutral');}else{g.rep-=35;log('没钱补偿，口碑大跌','bad');} } },
+      { text:'🔍 查明原因，申诉维权',   effect: g => { const ok=Math.random()<0.5;if(ok){g.rep-=8;log('申诉成功！口碑-8','neutral');}else{g.rep-=40;log('申诉失败！口碑-40','bad');} } },
+    ]},
+  { id:'stock',    name:'货源突然断供！',    emoji:'📦', type:'bad',     badge:'危机',
+    desc:'你的主力商品货源断了！接下来几天订单会减少，需要尽快解决。',
+    choices:[
+      { text:'🔄 紧急找备用货源 (-¥80)',effect: g => { if(g.money>=80){g.money-=80;g.dailyOrderBonus=Math.max(0,g.dailyOrderBonus-3);log('备用货源找到了！','neutral');}else{g.dailyOrderBonus-=8;log('断货！订单暴跌','bad');} } },
+      { text:'⏸️ 暂停接单，静待补货',   effect: g => { g.dailyOrderBonus-=6; log('暂停接单...订单减少','bad'); } },
+    ]},
+  { id:'kol',      name:'神秘大V转发！',     emoji:'🌟', type:'good',    badge:'好事',
+    desc:'一位百万粉丝大V无意间转发了你的商品！流量即将飙升！',
+    choices:[
+      { text:'🎉 趁热搞联名款活动',    effect: g => { g.rep+=50; g.dailyOrderBonus+=18; log('联名大爆！+50口碑 +18订单','good'); } },
+      { text:'📈 正常接单，控制库存',  effect: g => { g.rep+=30; g.dailyOrderBonus+=10; log('+30口碑 +10订单','good'); } },
+    ]},
+  { id:'keyword',  name:'关键词违规警告！',  emoji:'⚠️', type:'bad',     badge:'警告',
+    desc:'你的商品标题含有违规词，平台发来警告！',
+    choices:[
+      { text:'✏️ 立即修改标题',        effect: g => { g.rep-=5; log('已修改标题，轻微影响','neutral'); } },
+      { text:'🎲 忽略，碰碰运气',      effect: g => { const ok=Math.random()<0.4;if(ok){log('侥幸过关！','good');}else{g.dailyOrderBonus-=10;g.rep-=20;log('被限流处理！订单-10 口碑-20','bad');} } },
+    ]},
+  { id:'festival', name:'节日限时活动！',    emoji:'🎊', type:'good',    badge:'活动',
+    desc:'平台发起限时满减活动！参加可以冲销量，不参加则错失流量。',
+    choices:[
+      { text:'✅ 参加，让利冲销量',    effect: g => { g.dailyOrderBonus+=12; g.rep+=10; const loss=Math.floor(g.shelf.reduce((s,p)=>s+(p.price*0.15),0));g.money-=loss;log(`活动让利 -¥${loss}，+12订单 +10口碑`,'good'); } },
+      { text:'🚫 不参加，保住利润',    effect: g => { log('选择不参加节日活动','neutral'); } },
+    ]},
+  { id:'return',   name:'退货纠纷来袭！',    emoji:'😤', type:'bad',     badge:'售后',
+    desc:'买家说收到货有问题，申请退货！处理不当会严重影响口碑。',
+    choices:[
+      { text:'✅ 同意全额退款',        effect: g => { g.money-=35; g.rep-=15; g.returnCount++;log('全额退款 -¥35 口碑-15','bad'); } },
+      { text:'🔄 协商换货 (-¥50运费)', effect: g => { const ok=Math.random()<0.8;if(ok){g.money-=50;g.rep+=10;g.returnCount++;log('换货成功！口碑+10','good');}else{g.money-=50;g.rep-=20;log('换货失败，口碑-20','bad');} } },
+      { text:'❌ 拒绝退货',            effect: g => { g.rep-=30;if(Math.random()<0.3){g.rep-=20;log('拒退+差评扩散！口碑-50','bad');}else{log('拒退，口碑-30','bad');} } },
+    ]},
+  { id:'brush',    name:'刷单风波曝光！',    emoji:'🚨', type:'bad',     badge:'风险',
+    desc:'平台检测到可疑刷单行为！短期订单暴增后突然腰斩，流量被惩罚！',
+    choices:[
+      { text:'🔍 主动自查清理',        effect: g => { const loss=Math.floor(g.totalRevenue*0.05+200);g.money-=loss;g.rep-=20;log(`自查！-¥${loss} 口碑-20`,'bad'); } },
+      { text:'📋 否认并申诉',          effect: g => { const ok=Math.random()<0.5;if(ok){log('申诉成功！','good');}else{g.dailyOrderBonus-=12;g.rep-=30;log('申诉失败！限流+口碑-30','bad');} } },
+    ]},
+  { id:'flow',     name:'流量来源分化！',    emoji:'📡', type:'good',    badge:'机遇',
+    desc:'你的商品同时被多个渠道注意到！选择专注哪个渠道策略。',
+    choices:[
+      { text:'🌸 专注生活种草社区',    effect: g => { g.channelBonus='social';g.rep+=20;log('专注种草！转化率提升','good'); } },
+      { text:'📹 专注短视频平台爆发',  effect: g => { g.channelBonus='video';g.dailyOrderBonus+=10;log('短视频爆发！+10订单','good'); } },
+      { text:'⚖️ 均衡分配两边兼顾',   effect: g => { g.dailyOrderBonus+=4;g.rep+=8;log('均衡分配，稳步增长','good'); } },
+    ]},
+  { id:'tax',      name:'神秘税务检查！',    emoji:'🧾', type:'neutral',  badge:'合规',
+    desc:'税务部门抽查店铺合规！补缴税费后可获得官方认证，提升信任度。',
+    choices:[
+      { text:'✅ 主动补缴税费',        effect: g => { const tax=300+Math.floor(Math.random()*200);g.money-=tax;g.rep+=40;g.taxCompliant++;g.complianceBuff=2;log(`补缴¥${tax}！口碑+40 获合规认证！`,'good'); } },
+      { text:'😶 暂时忽略',            effect: g => { g.taxPending=true;log('暂时忽略...后续有风险','bad'); } },
+    ]},
+];
+
+const ACHIEVEMENTS = [
+  { id:'first_sale',  name:'第一桶金',     emoji:'💵', desc:'首次营业额超过¥500' },
+  { id:'rich',        name:'万元店主',     emoji:'💰', desc:'营业额达到¥10,000'  },
+  { id:'repstar',     name:'口碑之星',     emoji:'⭐', desc:'口碑达到300'         },
+  { id:'century',     name:'百单达人',     emoji:'📦', desc:'成交100个订单'       },
+  { id:'return_hero', name:'售后小能手',   emoji:'🛡️', desc:'化解3次退货纠纷'    },
+  { id:'tax_hero',    name:'合规达人',     emoji:'🏛️', desc:'主动补缴税务3次'    },
+];
+
+const LEVEL_CONFIGS = [
+  { lv:1, xpNeeded:200,  maxShelf:3, icon:'🏪', tag:'刚开张的小店' },
+  { lv:2, xpNeeded:500,  maxShelf:4, icon:'🛍️', tag:'有点人气了！' },
+  { lv:3, xpNeeded:1000, maxShelf:5, icon:'⭐', tag:'口碑不断上升中' },
+  { lv:4, xpNeeded:2000, maxShelf:6, icon:'🌟', tag:'超人气店铺！' },
+  { lv:5, xpNeeded:5000, maxShelf:8, icon:'👑', tag:'人气王店铺！' },
+  { lv:6, xpNeeded:9999, maxShelf:10, icon:'💎', tag:'传奇店铺，万人景仰' },
+];
+
+/* ============================================================
+   GAME STATE
+   ============================================================ */
+let G = {};
+
+function initState() {
+  G = {
+    money: 300, rep: 100, day: 1, level: 1, xp: 0,
+    shelf: [], selectedProduct: null, selectedPrice: 30,
+    pendingOrders: [], totalRevenue: 0, totalOrders: 0,
+    totalVisits: 0, dailyOrderBonus: 0, channel: null, channelBonus: null,
+    eventsToday: 0, eventCooldowns: {}, complianceBuff: 0,
+    taxPending: false, taxCompliant: 0, returnCount: 0,
+    unlockedAchievements: new Set(), eventLog: [],
+    dayRevenue: 0, dayOrderCount: 0,
+    lastDaySummary: null,
+    phase: 'idle', // 'idle' | 'ordering' | 'packing'
+  };
+}
+
+/* ============================================================
+   SCREEN MANAGEMENT
+   ============================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+function switchTab(name) {
+  ['shop','shelf','orders','stats'].forEach(t => {
+    document.getElementById('ntab-'+t).classList.remove('active');
+    document.getElementById('tab-'+t).classList.remove('active');
+  });
+  document.getElementById('ntab-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  sfxClick();
+  if(name==='shelf')  renderShelf();
+  if(name==='orders') renderOrders();
+  if(name==='stats')  renderStats();
+}
+
+/* ============================================================
+   START / RESTART
+   ============================================================ */
+function startGame() {
+  sfxSuccess();
+  initState();
+  showScreen('main');
+  renderAll();
+  setTimeout(() => { renderOrders(); }, 100);
+}
+
+function showStart() {
+  showScreen('start');
+}
+
+/* ============================================================
+   MASTER RENDER
+   ============================================================ */
+function renderAll() {
+  renderTopBar();
+  renderBanner();
+  renderMilestone();
+  renderProductGrid();
+  renderShelf();
+  renderOrders();
+  renderStats();
+  renderChannel();
+}
+
+function renderTopBar() {
+  const cfg = LEVEL_CONFIGS[Math.min(G.level-1, LEVEL_CONFIGS.length-1)];
+  document.getElementById('tb-avatar').textContent  = cfg.icon;
+  document.getElementById('tb-day').textContent     = `第 ${G.day} 天`;
+  document.getElementById('tb-lv').textContent      = `Lv.${G.level}`;
+  document.getElementById('tb-money').textContent   = fmtMoney(G.money);
+  document.getElementById('tb-rep').textContent     = G.rep;
+  document.getElementById('tb-rev').textContent     = fmtMoney(G.totalRevenue);
+  const needed = cfg.xpNeeded;
+  const pct = Math.min(100, Math.round(G.xp / needed * 100));
+  document.getElementById('xp-bar').style.width    = pct + '%';
+  document.getElementById('xp-label').textContent  = `升级进度 ${G.xp} / ${needed} XP`;
+}
+
+function renderBanner() {
+  const cfg = LEVEL_CONFIGS[Math.min(G.level-1, LEVEL_CONFIGS.length-1)];
+  document.getElementById('bn-icon').textContent = cfg.icon;
+  document.getElementById('tb-shopname').textContent = '我的萌哒哒小店';
+  document.getElementById('bn-name').textContent = '我的萌哒哒小店';
+  document.getElementById('bn-tag').textContent  = cfg.tag;
+  const starCount = Math.min(5, Math.floor(G.rep/100));
+  const starsEl = document.getElementById('bn-stars');
+  starsEl.innerHTML = '';
+  for(let i=0;i<5;i++){
+    const s = document.createElement('span');
+    s.className = 'star ' + (i < starCount ? 'filled' : 'empty');
+    s.textContent = i < starCount ? '★' : '☆';
+    starsEl.appendChild(s);
+  }
+}
+
+function renderMilestone() {
+  const pct = Math.min(100, G.totalRevenue/10000);
+  const segs = document.querySelectorAll('.ms-seg');
+  const filled = Math.floor(pct / 10);
+  segs.forEach((s, i) => s.classList.toggle('done', i < filled));
+  document.getElementById('ms-pct').textContent = pct.toFixed(1) + '%';
+}
+
+function renderProductGrid() {
+  const grid = document.getElementById('product-grid');
+  grid.innerHTML = '';
+  const shelfIds = new Set(G.shelf.map(s => s.id));
+  PRODUCTS.forEach(p => {
+    const onShelf = shelfIds.has(p.id);
+    const selected = G.selectedProduct && G.selectedProduct.id === p.id;
+    const d = document.createElement('div');
+    d.className = 'product-card' + (selected?' selected':'') + (onShelf?' on-shelf':'');
+    d.innerHTML = `<span class="prod-emoji">${p.emoji}</span><div class="prod-name">${p.name}</div><div class="prod-cost">成本¥${p.cost}</div>`;
+    if(!onShelf) d.onclick = () => selectProduct(p);
+    grid.appendChild(d);
+  });
+  document.getElementById('shelf-count-badge').textContent = `货架 ${G.shelf.length}/${getCurrentMaxShelf()}`;
+}
+
+function getCurrentMaxShelf() {
+  return LEVEL_CONFIGS[Math.min(G.level-1,LEVEL_CONFIGS.length-1)].maxShelf;
+}
+
+function selectProduct(p) {
+  sfxClick();
+  G.selectedProduct = p;
+  G.selectedPrice = Math.round((p.minP + p.maxP) / 2);
+  const panel = document.getElementById('pricing-panel');
+  panel.style.display = 'block';
+  document.getElementById('psp-emoji').textContent = p.emoji;
+  document.getElementById('psp-name').textContent  = p.name;
+  const slider = document.getElementById('price-slider');
+  slider.min = p.minP; slider.max = p.maxP; slider.value = G.selectedPrice;
+  document.getElementById('price-min').textContent = `¥${p.minP} 低价`;
+  document.getElementById('price-max').textContent = `高价 ¥${p.maxP}`;
+  updatePricing();
+  renderProductGrid();
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function cancelSelect() {
+  G.selectedProduct = null;
+  document.getElementById('pricing-panel').style.display = 'none';
+  renderProductGrid();
+}
+
+function updatePricing() {
+  const p = G.selectedProduct; if(!p) return;
+  const price = parseInt(document.getElementById('price-slider').value);
+  G.selectedPrice = price;
+  document.getElementById('price-display').textContent = '¥' + price;
+  const ratio = (price - p.minP) / (p.maxP - p.minP);
+  const orders = Math.max(1, Math.round(p.base * (1 - ratio * 0.65)));
+  const profit = price - p.cost;
+  const earn   = Math.max(0, profit * orders);
+  document.getElementById('pred-orders').textContent  = orders;
+  document.getElementById('pred-profit').textContent  = profit > 0 ? '¥'+profit : '-¥'+Math.abs(profit);
+  document.getElementById('pred-profit').className    = 'predict-val ' + (profit>0?'green':'red');
+  document.getElementById('pred-earn').textContent    = '¥' + earn;
+}
+
+function listProduct() {
+  const p = G.selectedProduct; if(!p) return;
+  if(G.shelf.length >= getCurrentMaxShelf()) { showToast('货架满了！升级解锁更多槽位 📦','bad'); sfxWarning(); return; }
+  if(G.money < p.cost) { showToast('资金不足，买不起货！💸','bad'); sfxWarning(); return; }
+  sfxSuccess();
+  G.money -= p.cost;
+  G.shelf.push({ id:p.id, emoji:p.emoji, name:p.name, price:G.selectedPrice, cost:p.cost, base:p.base });
+  G.selectedProduct = null;
+  document.getElementById('pricing-panel').style.display = 'none';
+  showToast(`${p.emoji} ${p.name} 成功上架！`,'good');
+  renderAll();
+  switchTab('orders');
+}
+
+/* ---- SHELF ---- */
+function renderShelf() {
+  const max = getCurrentMaxShelf();
+  // dots
+  const dotsEl = document.getElementById('shelf-dots');
+  dotsEl.innerHTML = '';
+  for(let i=0;i<max;i++){
+    const d = document.createElement('div');
+    d.className = 'shelf-dot' + (i<G.shelf.length?' filled':'');
+    dotsEl.appendChild(d);
+  }
+  document.getElementById('shelf-label').textContent = `${G.shelf.length} / ${max} 个商品`;
+
+  const list = document.getElementById('shelf-list');
+  if(G.shelf.length===0) {
+    list.innerHTML = '<div class="empty-state"><span class="empty-emoji">🏪</span>还没有上架商品哦~<br>去选品页选择商品上架吧！</div>';
+    return;
+  }
+  list.innerHTML = '';
+  G.shelf.forEach((item, idx) => {
+    const d = document.createElement('div');
+    d.className = 'shelf-item';
+    const profit = item.price - item.cost;
+    d.innerHTML = `<span class="si-emoji">${item.emoji}</span><div class="si-info"><div class="si-name">${item.name}</div><div class="si-detail">售价¥${item.price} · 成本¥${item.cost} · 利润<span style="color:#16A34A;font-weight:800">¥${profit}</span></div></div><button class="si-remove" onclick="removeShelf(${idx})">下架</button>`;
+    list.appendChild(d);
+  });
+}
+
+function removeShelf(idx) {
+  sfxClick();
+  G.shelf.splice(idx,1);
+  G.pendingOrders = G.pendingOrders.filter(o => G.shelf.some(s=>s.id===o.productId));
+  renderAll();
+}
+
+/* ---- CHANNEL ---- */
+function renderChannel() {
+  const locked = G.level < 2;
+  document.getElementById('ch-lock-badge').textContent = locked ? 'Lv.2 解锁' : '已解锁';
+  document.getElementById('channel-options').style.opacity = locked ? 0.4 : 1;
+  document.getElementById('channel-options').style.pointerEvents = locked ? 'none' : 'auto';
+  document.getElementById('ch-social').classList.toggle('active-ch', G.channel==='social');
+  document.getElementById('ch-video').classList.toggle('active-ch', G.channel==='video');
+}
+
+function selectChannel(ch) {
+  if(G.level<2){ showToast('升到Lv.2才能选渠道哦！','neutral'); return; }
+  sfxClick();
+  G.channel = ch;
+  renderChannel();
+  const msg = ch==='social' ? '🌸 已选择生活种草社区，转化率提升！' : '📹 已选择短视频平台，订单爆发！但注意刷单风险';
+  showToast(msg,'good');
+}
+
+/* ---- ORDERS ---- */
+function generateOrders() {
+  if(G.shelf.length===0){ renderOrders(); return; }
+  G.pendingOrders = [];
+  const sources = ['🌸种草','📹短视频','🔍搜索','👫推荐','💌私信'];
+  G.shelf.forEach(item => {
+    const ratio = (item.price - item.cost) / item.price;
+    let base = Math.max(1, Math.round(item.base * (1-ratio*0.5)));
+    // Channel multiplier
+    if(G.channel==='social') base = Math.round(base*1.2);
+    if(G.channel==='video')  base = Math.round(base*1.8);
+    // Bonus from events
+    base += G.dailyOrderBonus;
+    // Compliance buff
+    if(G.complianceBuff>0) base = Math.round(base*1.1);
+    const qty = Math.max(1, base + Math.floor(Math.random()*3-1));
+    const source = sources[Math.floor(Math.random()*sources.length)];
+    G.pendingOrders.push({
+      productId: item.id, emoji: item.emoji, name: item.name,
+      qty, price: item.price, cost: item.cost,
+      earn: (item.price - item.cost) * qty,
+      source
+    });
+  });
+  G.totalVisits += G.pendingOrders.reduce((s,o)=>s+o.qty,0)*4;
+  renderOrders();
+  // Update order badge
+  const badge = document.getElementById('order-badge');
+  if(G.pendingOrders.length>0){
+    badge.textContent = G.pendingOrders.length;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderOrders() {
+  const wrap = document.getElementById('orders-list-wrap');
+  const empty = document.getElementById('orders-empty');
+  const actions = document.getElementById('order-actions');
+
+  // Day summary
+  const sumWrap = document.getElementById('day-summary-wrap');
+  if(G.lastDaySummary) {
+    const s = G.lastDaySummary;
+    sumWrap.innerHTML = `<div class="day-summary"><div class="ds-title">📊 第${s.day}天结算</div><div class="ds-row"><span>当日营业额</span><span class="ds-val" style="color:#16A34A">+¥${s.rev}</span></div><div class="ds-row"><span>成交订单</span><span class="ds-val">${s.orders}单</span></div><div class="ds-row"><span>口碑变化</span><span class="ds-val" style="color:${s.repDelta>=0?'#7C3AED':'#B91C1C'}">${s.repDelta>=0?'+':''}${s.repDelta}</span></div></div>`;
+  } else {
+    sumWrap.innerHTML = '';
+  }
+
+  if(G.pendingOrders.length===0){
+    if(empty) empty.style.display = 'block';
+    wrap.innerHTML = '';
+    wrap.appendChild(empty||document.createElement('div'));
+  } else {
+    if(empty) empty.style.display = 'none';
+    wrap.innerHTML = '';
+    G.pendingOrders.forEach((o,idx)=>{
+      const d = document.createElement('div');
+      d.className = 'order-card';
+      d.innerHTML = `<span class="oc-emoji">${o.emoji}</span><div class="oc-info"><div class="oc-name">${o.name}</div><div class="oc-meta">×${o.qty}件 · ${o.source}</div></div><span class="oc-earn">+¥${Math.max(0,o.earn)}</span><button class="pack-btn" onclick="packOrder(${idx})">打包📦</button>`;
+      wrap.appendChild(d);
+    });
+  }
+
+  // Action buttons
+  actions.innerHTML = '';
+  if(G.pendingOrders.length>1){
+    const btn = document.createElement('button');
+    btn.className = 'pack-all-btn';
+    btn.textContent = `📦 全部打包 (+¥${G.pendingOrders.reduce((s,o)=>s+Math.max(0,o.earn),0)})`;
+    btn.onclick = packAll;
+    actions.appendChild(btn);
+  }
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'next-day-btn' + (G.pendingOrders.length===0?' glow':'');
+  nextBtn.innerHTML = '☀️ 进入下一天';
+  nextBtn.onclick = nextDay;
+  actions.appendChild(nextBtn);
+
+  // Update badge
+  const badge = document.getElementById('order-badge');
+  if(G.pendingOrders.length>0){
+    badge.textContent = G.pendingOrders.length;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function packOrder(idx) {
+  const o = G.pendingOrders[idx];
+  const earn = Math.max(0, o.earn);
+  G.money += earn;
+  G.totalRevenue += earn;
+  G.totalOrders  += o.qty;
+  G.dayRevenue   += earn;
+  G.dayOrderCount+= o.qty;
+  gainXP(8 * o.qty);
+  G.pendingOrders.splice(idx,1);
+  sfxCoin();
+  floatCoin(event, '+¥'+earn);
+  renderTopBar();
+  renderMilestone();
+  renderOrders();
+  renderStats();
+  checkAchievements();
+  if(G.totalRevenue >= 1000000) { endGame(true); return; }
+}
+
+function packAll() {
+  const total = G.pendingOrders.reduce((s,o)=>s+Math.max(0,o.earn),0);
+  const totalQty = G.pendingOrders.reduce((s,o)=>s+o.qty,0);
+  G.money += total;
+  G.totalRevenue += total;
+  G.totalOrders  += totalQty;
+  G.dayRevenue   += total;
+  G.dayOrderCount+= totalQty;
+  gainXP(8 * totalQty);
+  G.pendingOrders = [];
+  sfxCoin(); sfxSuccess();
+  showToast(`💰 全部打包！+¥${total}`,'good');
+  renderTopBar(); renderMilestone(); renderOrders(); renderStats();
+  checkAchievements();
+  if(G.totalRevenue >= 1000000) endGame(true);
+}
+
+/* ---- NEXT DAY ---- */
+function nextDay() {
+  sfxClick();
+  const prevRep = G.rep;
+  G.lastDaySummary = { day:G.day, rev:G.dayRevenue, orders:G.dayOrderCount, repDelta: G.rep-prevRep };
+
+  G.day++;
+  G.eventsToday = 0;
+  G.dailyOrderBonus = 0;
+  G.channelBonus = null;
+  G.dayRevenue = 0; G.dayOrderCount = 0;
+
+  // Rep decay at high rep
+  if(G.rep > 500) G.money -= 10;
+  // Tax penalty
+  if(G.taxPending && Math.random()<0.1){
+    const pen = 200+Math.floor(Math.random()*400);
+    G.money -= pen;
+    showToast('🧾 税务罚款 -¥'+pen+'！','bad');
+    sfxWarning();
+    G.taxPending = false;
+  }
+  if(G.complianceBuff>0) G.complianceBuff--;
+
+  if(G.shelf.length===0) showToast('记得上架商品哦！','neutral');
+  generateOrders();
+  renderAll();
+  switchTab('orders');
+  if(G.money < 0) { endGame(false); return; }
+  setTimeout(()=>maybeFireEvent(), 800);
+}
+
+/* ---- XP / LEVELING ---- */
+function gainXP(amount) {
+  G.xp += amount;
+  const cfg = LEVEL_CONFIGS[Math.min(G.level-1,LEVEL_CONFIGS.length-1)];
+  if(G.xp >= cfg.xpNeeded && G.level < LEVEL_CONFIGS.length){
+    G.xp -= cfg.xpNeeded;
+    G.level++;
+    sfxLevelup();
+    showLevelUp();
+    renderAll();
+  }
+}
+
+function showLevelUp() {
+  const cfg = LEVEL_CONFIGS[Math.min(G.level-1,LEVEL_CONFIGS.length-1)];
+  const popup = document.createElement('div');
+  popup.className = 'levelup-popup';
+  popup.innerHTML = `<div class="levelup-card"><div class="lu-icon">${cfg.icon}</div><div class="lu-title">升级啦！</div><div class="lu-lv">Lv.${G.level}</div><div class="lu-unlocks">货架扩展到 ${cfg.maxShelf} 个商品${G.level===2?'<br>🎉 流量渠道已解锁！':''}</div><button class="lu-btn" onclick="this.closest('.levelup-popup').remove()">太棒了！🎉</button></div>`;
+  document.body.appendChild(popup);
+  fireConfetti();
+}
+
+/* ---- EVENTS ---- */
+function maybeFireEvent() {
+  if(G.eventsToday >= 2) return;
+  if(Math.random() > 0.72) return;
+  const avail = EVENTS.filter(e => G.day >= (G.eventCooldowns[e.id]||0));
+  if(!avail.length) return;
+  const event = avail[Math.floor(Math.random()*avail.length)];
+  G.eventsToday++;
+  sfxEvent();
+  showEvent(event);
+}
+
+function showEvent(ev) {
+  const overlay = document.createElement('div');
+  overlay.className = 'event-overlay';
+  overlay.id = 'event-overlay';
+  const badgeClass = `eb-${ev.type}`;
+  const iconClass  = ev.type;
+  let choicesHtml = ev.choices.map((c,i) =>
+    `<button class="choice-btn" onclick="resolveEvent(${i})">${c.text}</button>`
+  ).join('');
+  overlay.innerHTML = `<div class="event-popup ${ev.type}"><div class="event-icon-wrap ${iconClass}">${ev.emoji}</div><div class="event-badge ${badgeClass}">${ev.badge}</div><div class="event-title">${ev.name}</div><div class="event-desc">${ev.desc}</div><div class="event-choices">${choicesHtml}</div></div>`;
+  document.body.appendChild(overlay);
+  window._currentEvent = ev;
+}
+
+function resolveEvent(idx) {
+  const ev = window._currentEvent; if(!ev) return;
+  ev.choices[idx].effect(G);
+  const cdMap = {return:3,brush:4,flow:2,tax:5,hot:2,badrep:3,kol:3,festival:2};
+  G.eventCooldowns[ev.id] = G.day + (cdMap[ev.id]||1);
+  document.getElementById('event-overlay')?.remove();
+  renderAll();
+  checkAchievements();
+  if(G.money < 0) { endGame(false); return; }
+  if(G.eventsToday < 2) setTimeout(maybeFireEvent, 2000);
+}
+
+/* ---- ACHIEVEMENTS ---- */
+const ACH_CHECKS = {
+  first_sale:  g => g.totalRevenue >= 500,
+  rich:        g => g.totalRevenue >= 10000,
+  repstar:     g => g.rep >= 300,
+  century:     g => g.totalOrders  >= 100,
+  return_hero: g => (g.returnCount||0) >= 3,
+  tax_hero:    g => (g.taxCompliant||0) >= 3,
+};
+
+function checkAchievements() {
+  ACHIEVEMENTS.forEach(a => {
+    if(!G.unlockedAchievements.has(a.id) && ACH_CHECKS[a.id]?.(G)) {
+      G.unlockedAchievements.add(a.id);
+      showAchievementPopup(a);
+    }
+  });
+}
+
+function showAchievementPopup(a) {
+  sfxSuccess();
+  const el = document.createElement('div');
+  el.className = 'ach-popup';
+  el.innerHTML = `<div class="ap-label">🏅 成就解锁！</div><div class="ap-name">${a.emoji} ${a.name}</div>`;
+  document.body.appendChild(el);
+  fireConfetti();
+  setTimeout(()=>el.remove(), 3500);
+}
+
+function renderStats() {
+  document.getElementById('st-rev').textContent    = fmtMoney(G.totalRevenue);
+  document.getElementById('st-orders').textContent = G.totalOrders;
+  document.getElementById('st-rep').textContent    = G.rep;
+  const conv = G.totalVisits > 0 ? ((G.totalOrders/G.totalVisits)*100).toFixed(1) : 0;
+  document.getElementById('st-conv').textContent   = conv + '%';
+
+  const goalPct = Math.min(100, G.totalRevenue/10000).toFixed(1);
+  document.getElementById('goal-cur').textContent  = fmtMoney(G.totalRevenue);
+  document.getElementById('goal-bar').style.width  = goalPct + '%';
+  document.getElementById('goal-pct').textContent  = goalPct + '% 完成';
+
+  // Achievements
+  const grid = document.getElementById('ach-grid');
+  grid.innerHTML = '';
+  ACHIEVEMENTS.forEach(a => {
+    const done = G.unlockedAchievements.has(a.id);
+    const d = document.createElement('div');
+    d.className = 'ach-item' + (done?' unlocked':'');
+    d.innerHTML = `<span class="ach-emoji ${done?'':'ach-locked'}">${a.emoji}</span><div class="ach-name">${a.name}</div><div style="font-size:10px;color:var(--brown-xs);margin-top:2px">${a.desc}</div>`;
+    grid.appendChild(d);
+  });
+  const achCount = G.unlockedAchievements.size;
+  document.getElementById('ach-count-badge').textContent = `${achCount}/6 解锁`;
+
+  // Log
+  const logEl = document.getElementById('event-log');
+  logEl.innerHTML = '';
+  G.eventLog.slice(-30).reverse().forEach(item => {
+    const d = document.createElement('div');
+    d.className = `log-item ${item.type||''}`;
+    d.textContent = `第${item.day}天：${item.msg}`;
+    logEl.appendChild(d);
+  });
+}
+
+/* ---- GAME OVER ---- */
+function endGame(win) {
+  showScreen('gameover');
+  document.getElementById('go-emoji').textContent = win ? '🏆' : '😢';
+  document.getElementById('go-title').textContent = win ? '恭喜！百万营业额达成！' : '资金耗尽，经营失败…';
+  document.getElementById('go-sub').textContent   = win ? '你成为了传奇电商店主！🎉 继续努力，打造更大的帝国！' : '别灰心宝子，再来一次一定行！💪 总结经验，下次会更好！';
+  document.getElementById('final-grid').innerHTML = `
+    <div class="final-box"><div class="fb-label">💰 总营业额</div><div class="fb-val">${fmtMoney(G.totalRevenue)}</div></div>
+    <div class="final-box"><div class="fb-label">📦 成交订单</div><div class="fb-val">${G.totalOrders}</div></div>
+    <div class="final-box"><div class="fb-label">⭐ 最终口碑</div><div class="fb-val">${G.rep}</div></div>
+    <div class="final-box"><div class="fb-label">🗓️ 经营天数</div><div class="fb-val">${G.day}天</div></div>
+  `;
+  if(win) { sfxLevelup(); fireConfetti(); }
+  else sfxWarning();
+}
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+function fmtMoney(n) {
+  if(n >= 1000000) return '¥' + (n/10000).toFixed(0) + 'w';
+  if(n >= 10000)   return '¥' + (n/10000).toFixed(1) + 'w';
+  return '¥' + Math.round(n);
+}
+
+function log(msg, type) {
+  G.eventLog.push({ day:G.day, msg, type: type||'neutral' });
+}
+
+function showToast(msg, type) {
+  const container = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type||'');
+  t.textContent = msg;
+  container.appendChild(t);
+  setTimeout(()=>{
+    t.style.opacity = '0';
+    t.style.transition = 'opacity 0.4s';
+    setTimeout(()=>t.remove(), 400);
+  }, 2500);
+}
+
+function floatCoin(e, text) {
+  const el = document.createElement('div');
+  el.className = 'coin-float';
+  el.textContent = text;
+  const x = e?.clientX || window.innerWidth/2;
+  const y = e?.clientY || window.innerHeight/2;
+  el.style.left = (x - 20) + 'px';
+  el.style.top  = (y - 10) + 'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 1100);
+}
+
+function fireConfetti() {
+  const colors = ['#FF8FAB','#FFD166','#06D6A0','#4ECDC4','#C084FC','#FF9F43','#FF6B6B'];
+  for(let i=0;i<24;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-p';
+    el.style.cssText = `left:${Math.random()*100}%;top:10%;background:${colors[i%colors.length]};animation-duration:${1.2+Math.random()*0.8}s;animation-delay:${Math.random()*0.4}s;border-radius:${Math.random()>0.5?'50%':'2px'};`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2500);
+  }
+}
+</script>
+</body>
+</html>
